@@ -18,7 +18,8 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 
 # Leitura do ficheiro csv com os dados
-df = pd.read_csv ('diabetes_binary.csv', delimiter = ",")
+df = pd.read_csv ('diabetes_multi.csv', delimiter = ",")
+print ("hello")
 
 # Seleção das colunas das características
 X = df.drop("Diabetes_binary", axis = 1)
