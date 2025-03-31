@@ -48,3 +48,13 @@ plt.show()
 sns.countplot(x = y_train)
 plt.title("Spam distribution (train)")
 plt.show()
+
+##---------- Pré-processamento ----------##
+# Reduzir o número de exemplos da classe dominante (undersampling) nos dados de treino
+undersampler = RandomUnderSampler(sampling_strategy = 'auto', random_state = 42)
+X_train_under, y_train_under = undersampler.fit_resample(X_train, y_train)
+
+##---------- Pré-processamento ----------##
+# Aplicar SMOTE aos dados de treino
+smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
+X_train_SMOTE, y_train_SMOTE = smote.fit_resample(X_train, y_train)
