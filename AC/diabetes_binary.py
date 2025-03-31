@@ -19,7 +19,7 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, confu
 
 # Leitura do ficheiro csv com os dados
 df = pd.read_csv ('diabetes_multi.csv', delimiter = ",")
-print ("hello")
+print ("vou passar-me comm isto")
 
 # Seleção das colunas das características
 X = df.drop("Diabetes_binary", axis = 1)
