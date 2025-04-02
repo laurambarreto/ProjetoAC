@@ -1,6 +1,6 @@
 # Import das bibliotecas necessárias
 import time
-from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -18,13 +18,13 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 
 # Leitura do ficheiro csv com os dados
-df = pd.read_csv ('diabetes_multi.csv', delimiter = ",")
+df = pd.read_csv ('diabetes_binary.csv', delimiter = ",")
 
 # Seleção das colunas das características
-X = df.drop("Diabetes_012", axis = 1)
+X = df.drop("Diabetes_binary", axis = 1)
 
 # Seleção da coluna target
-y = df.Diabetes_012
+y = df.Diabetes_binary
 
 # Divisão em conjunto de treino e de teste
 X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
@@ -40,11 +40,20 @@ print(df.info(), "\n")
 # Correlações entre todas as colunas 
 correlation_matrix = df.corr()
 plt.figure(figsize = (6, 4))
-sns.heatmap(correlation_matrix,cmap='coolwarm', annot = False)
+sns.heatmap(correlation_matrix,cmap = 'coolwarm', annot = False)
 plt.title('Correlation Matrix Heatmap')
 plt.show()
 
-# Distribuição de spam e não spam nos dados de treino antes do undersamplimg
+# Distribuição de diabetes e não diabetes nos dados de treino antes de usar SMOTE
 sns.countplot(x = y_train)
-plt.title("Spam distribution (train)")
+plt.title("Diabetes distribution (train)")
 plt.show()
+
+##---------- Pré-processamento ----------##
+# Aplicar SMOTE aos dados de treino
+smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
+X_train_SMOTE, y_train_SMOTE = smote.fit_resample(X_train, y_train)
+
+# Distribuição de diabetes e não diabetes com SMOTE
+sns.countplot(x = y_train_SMOTE)
+plt.title("Diabetes distribution (train with SMOTE)", fontsize = 22)

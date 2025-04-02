@@ -18,13 +18,13 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 
 # Leitura do ficheiro csv com os dados
-df = pd.read_csv ('diabetes_binary.csv', delimiter = ",")
+df = pd.read_csv ('diabetes_multi.csv', delimiter = ",")
 
 # Seleção das colunas das características
-X = df.drop("Diabetes_binary", axis = 1)
+X = df.drop("Diabetes_012", axis = 1)
 
 # Seleção da coluna target
-y = df.Diabetes_binary
+y = df.Diabetes_012
 
 # Divisão em conjunto de treino e de teste
 X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
@@ -40,11 +40,11 @@ print(df.info(), "\n")
 # Correlações entre todas as colunas 
 correlation_matrix = df.corr()
 plt.figure(figsize = (6, 4))
-sns.heatmap(correlation_matrix,cmap='coolwarm', annot = False)
+sns.heatmap(correlation_matrix,cmap = 'coolwarm', annot = False)
 plt.title('Correlation Matrix Heatmap')
 plt.show()
 
 # Distribuição de spam e não spam nos dados de treino antes do undersamplimg
 sns.countplot(x = y_train)
-plt.title("Spam distribution (train)")
+plt.title("Diabetes distribution (train with undersampling)")
 plt.show()
