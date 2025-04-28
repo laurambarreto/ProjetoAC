@@ -65,7 +65,7 @@ sns.countplot(x = y)
 plt.title("Diabetes distribution")
 plt.show()
 
-# Distribuição de spam e não spam nos dados de treino antes do undersamplimg
+# Distribuição dos dados de treino antes do SMOTE
 sns.countplot(x = y_train)
 plt.title("Diabetes distribution (train with SMOTE)")
 plt.show()

@@ -85,3 +85,5 @@ print('Recall: %.2f' % recall_score(y_test, y_pred))
 print('Precision: %.2f' % precision_score(y_test, y_pred))
 print('F1: %.2f' % f1_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
+
+##---------- Neuronal Network ----------##
