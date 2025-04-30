@@ -25,13 +25,14 @@ df = pd.read_csv ('diabetes_multi.csv', delimiter = ",")
 print("Dados em falta por coluna:")
 print(df.isnull().sum(), "\n")
 
-# Verificar duplicatas completas (linhas idênticas)
-duplicatas = df[df.duplicated(keep=False)]  # `keep=False` marca todas as ocorrências
-print(f"Número de linhas duplicadas: {len(duplicatas)}") 
+# Verificar réplicas completas (linhas idênticas)
+replics = df[df.duplicated(keep = False)]  # `keep = False` marca todas as ocorrências
+print(f"Número de linhas duplicadas: {len(replics)}") 
+
 # Agrupa linhas idênticas e conta ocorrências
-contagem_duplicatas = df.groupby(df.columns.tolist()).size().reset_index(name='Contagem')
+contagem_duplicatas = df.groupby(df.columns.tolist()).size().reset_index(name = 'Contagem')
 # Mostra as linhas repetidas
-print(contagem_duplicatas.sort_values('Contagem', ascending=False))
+print(contagem_duplicatas.sort_values('Contagem', ascending = False))
 
 # Remover duplicados
 df = df.drop_duplicates()
@@ -94,14 +95,14 @@ y_pred = mlp.predict(X_test)
 
 # Evaluate the classifier
 # Macro-Average (igual peso para todas classes)
-macro_precision = precision_score(y_test, y_pred, average='macro')
-macro_recall = recall_score(y_test, y_pred, average='macro')
-macro_f1 = f1_score(y_test, y_pred, average='macro')
+macro_precision = precision_score(y_test, y_pred, average = 'macro')
+macro_recall = recall_score(y_test, y_pred, average = 'macro')
+macro_f1 = f1_score(y_test, y_pred, average = 'macro')
 
 # Weighted-Average (ponderado pelo número de amostras)
-weighted_precision = precision_score(y_test, y_pred, average='weighted')
-weighted_recall = recall_score(y_test, y_pred, average='weighted')
-weighted_f1 = f1_score(y_test, y_pred, average='weighted')
+weighted_precision = precision_score(y_test, y_pred, average = 'weighted')
+weighted_recall = recall_score(y_test, y_pred, average = 'weighted')
+weighted_f1 = f1_score(y_test, y_pred, average = 'weighted')
 
 print(classification_report(y_test, y_pred))
 print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
@@ -113,9 +114,9 @@ print(f"Weighted Recall: {weighted_recall:.4f}")
 print(f"Weighted F1-Score: {weighted_f1:.4f}\n")
 
 cm = confusion_matrix(y_test, y_pred)
-plt.figure(figsize=(8, 6))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'], yticklabels=['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'])
-plt.xlabel('Predito')
+plt.figure(figsize = (8, 6))
+sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels=['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'], yticklabels = ['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'])
+plt.xlabel('Previsão')
 plt.ylabel('Real')
 plt.title('Matriz de Confusão')
 plt.show()

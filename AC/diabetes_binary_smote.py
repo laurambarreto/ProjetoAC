@@ -78,7 +78,7 @@ X_train_SMOTE, y_train_SMOTE = smote.fit_resample(X_train, y_train)
 
 # Distribuição de diabetes e não diabetes nos dados de treino com SMOTE
 sns.countplot(x = y_train_SMOTE)
-plt.title("Diabetes distribution (train with undersampling)", fontsize = 18)
+plt.title("Diabetes distribution (train with SMOTE)", fontsize = 18)
 plt.xlabel("Diabetes", fontsize = 14)
 plt.ylabel("Count", fontsize = 14)
 plt.ylim(0, 170000)
