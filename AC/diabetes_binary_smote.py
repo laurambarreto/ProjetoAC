@@ -22,16 +22,16 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, confu
 df = pd.read_csv ('diabetes_binary.csv', delimiter = ",")
 
 # Verificar dados nulos (NÃO HÁ NENHUM DADO A FALTAR)
-print("Dados em falta por coluna:")
+print("Missing data per column:")
 print(df.isnull().sum(), "\n")
 
 # Verificar duplicatas completas (linhas idênticas)
-duplicatas = df[df.duplicated(keep=False)]  # `keep=False` marca todas as ocorrências
-print(f"Número de linhas duplicadas: {len(duplicatas)}") 
+duplicated = df[df.duplicated(keep = False)]  # `keep = False` marca todas as ocorrências
+print(f"Número de linhas duplicadas: {len(duplicated)}") 
 # Agrupa linhas idênticas e conta ocorrências
-contagem_duplicatas = df.groupby(df.columns.tolist()).size().reset_index(name='Contagem')
+count_duplicated = df.groupby(df.columns.tolist()).size().reset_index(name = 'Count')
 # Mostra as linhas repetidas
-print(contagem_duplicatas.sort_values('Contagem', ascending=False))
+print(count_duplicated.sort_values('Count', ascending = False))
 
 # Remover duplicados
 df = df.drop_duplicates()
@@ -81,11 +81,11 @@ pca = PCA(n_components = 2)
 X_reduced = pca.fit_transform(X_norm)
 
 # Define um array de cores fixas: ex. vermelho, verde, azul
-cores = {0: '#ffc0dc', 1: '#ffff00'}
+colors = {0: '#ffc0dc', 1: '#ffff00'}
 # Mapeia as cores com base nas classes
-cores_mapeadas = [cores[classe] for classe in y]
+maped_colors = [colors[classe] for classe in y]
 # Visualizar os dados reduzidos em 2D
-plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = cores_mapeadas, alpha = 0.5)
+plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = maped_colors, alpha = 0.5)
 plt.title("Real classes (diabetes vs. no diabetes)")
 plt.show()
 

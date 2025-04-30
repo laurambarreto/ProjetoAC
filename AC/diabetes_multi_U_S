@@ -54,7 +54,7 @@ X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, ran
 objective_len = 80000
 
 # Aplica UNDERSAMPLING à classe 0
-rus = RandomUnderSampler(sampling_strategy={0: objective_len}, random_state = 42)
+rus = RandomUnderSampler(sampling_strategy = {0: objective_len}, random_state = 42)
 X_rus, y_rus = rus.fit_resample(X_train, y_train)
 
 # Aplica SMOTE a tudo o que saiu do RUS para aumentar as classes 1 e 2
@@ -75,7 +75,7 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train_bal)
 X_test_scaled = scaler.transform(X_test)
 
-mlp = MLPClassifier(hidden_layer_sizes = (64, 32, 16), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
+mlp = MLPClassifier(hidden_layer_sizes = (64, 32, 16), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001, random_state = 42)
 
 start_time=time.time()
 mlp.fit(X_train_scaled, y_train_bal)
