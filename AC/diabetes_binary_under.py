@@ -50,7 +50,6 @@ ax=sns.countplot(x = y, color = '#73D7FF')
 plt.title("Diabetes binary distribution", fontsize = 22)
 plt.xlabel("Diabetes_binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
-
 # Aumentar o tamanho dos números dos eixos
 plt.tick_params(axis='both', which='major', labelsize=13)
 # Colocar grelha nos dois eixos, atrás das barras
