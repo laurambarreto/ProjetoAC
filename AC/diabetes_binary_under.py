@@ -46,10 +46,11 @@ plt.title('Correlation Matrix Heatmap')
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
-ax=sns.countplot(x = y, color='#73D7FF') 
+ax=sns.countplot(x = y, color = '#73D7FF') 
 plt.title("Diabetes binary distribution", fontsize = 22)
 plt.xlabel("Diabetes_binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+
 # Aumentar o tamanho dos números dos eixos
 plt.tick_params(axis='both', which='major', labelsize=13)
 # Colocar grelha nos dois eixos, atrás das barras
@@ -82,14 +83,14 @@ plt.ylim(0, 170000)
 plt.show()
 
 ##---------- Neuronal Network ----------##
-# Create a MLP classifier
+# Criar o MLP classifier
 mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
 
-# Train the classifier
+# Treinar the classifier
 mlp.fit(X_train_under, y_train_under)
 y_pred = mlp.predict(X_test)
 
-# Evaluate the classifier
+# Avaliar o classifier
 print('Class labels:', np.unique(y_test))
 print('Misclassified samples: %d' % (y_test != y_pred).sum())
 print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))

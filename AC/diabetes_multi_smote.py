@@ -24,16 +24,18 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, confu
 df = pd.read_csv ('diabetes_multi.csv', delimiter = ",")
 
 # Verificar dados nulos (NÃO HÁ NENHUM DADO A FALTAR)
-print("Dados em falta por coluna:")
+print("Missing data per column:")
 print(df.isnull().sum(), "\n")
 
-# Verificar duplicatas completas (linhas idênticas)
-duplicatas = df[df.duplicated(keep=False)]  # `keep=False` marca todas as ocorrências
-print(f"Número de linhas duplicadas: {len(duplicatas)}") 
+# Verificar réplicas completas (linhas idênticas)
+duplicated = df[df.duplicated(keep = False)]  # `keep = False` marca todas as ocorrências
+print(f"Número de linhas duplicadas: {len(duplicated)}") 
+
 # Agrupa linhas idênticas e conta ocorrências
-contagem_duplicatas = df.groupby(df.columns.tolist()).size().reset_index(name='Contagem')
+count_duplicated = df.groupby(df.columns.tolist()).size().reset_index(name = 'Count')
+
 # Mostra as linhas repetidas
-print(contagem_duplicatas.sort_values('Contagem', ascending=False))
+print(count_duplicated.sort_values('Count', ascending = False))
 
 # Remover duplicados
 df = df.drop_duplicates()
@@ -77,6 +79,7 @@ print(df['Diabetes_012'].value_counts(), "\n")
 # Normalizar os dados
 scaler = StandardScaler()
 X_norm = pd.DataFrame(scaler.fit_transform(X), columns = X.columns)
+
 # Reduzir a dimensionalidade para 2D para visualização (PCA)
 pca = PCA(n_components = 2)
 X_reduced = pca.fit_transform(X_norm)
@@ -104,23 +107,23 @@ plt.ylim(0, 170000)
 plt.show()
 
 ##---------- Neuronal Network ----------##
-# Create a MLP classifier
+# Criar o MLP classifier
 mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
 
-# Train the classifier
+# Treinar o classifier
 mlp.fit(X_train_SMOTE, y_train_SMOTE)
 y_pred = mlp.predict(X_test)
 
-# Evaluate the classifier
+# Avaliar o classifier
 # Macro-Average (igual peso para todas classes)
-macro_precision = precision_score(y_test, y_pred, average='macro')
-macro_recall = recall_score(y_test, y_pred, average='macro')
-macro_f1 = f1_score(y_test, y_pred, average='macro')
+macro_precision = precision_score(y_test, y_pred, average = 'macro')
+macro_recall = recall_score(y_test, y_pred, average = 'macro')
+macro_f1 = f1_score(y_test, y_pred, average = 'macro')
 
 # Weighted-Average (ponderado pelo número de amostras)
-weighted_precision = precision_score(y_test, y_pred, average='weighted')
-weighted_recall = recall_score(y_test, y_pred, average='weighted')
-weighted_f1 = f1_score(y_test, y_pred, average='weighted')
+weighted_precision = precision_score(y_test, y_pred, average = 'weighted')
+weighted_recall = recall_score(y_test, y_pred, average = 'weighted')
+weighted_f1 = f1_score(y_test, y_pred, average = 'weighted')
 
 print(classification_report(y_test, y_pred))
 print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
@@ -132,9 +135,9 @@ print(f"Weighted Recall: {weighted_recall:.4f}")
 print(f"Weighted F1-Score: {weighted_f1:.4f}\n")
 
 cm = confusion_matrix(y_test, y_pred)
-plt.figure(figsize=(8, 6))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'], yticklabels=['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'])
-plt.xlabel('Predito')
+plt.figure(figsize = (8, 6))
+sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels=['No Diabetes', 'Diabetes 1', 'Diabetes 2'], yticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'])
+plt.xlabel('Predicted')
 plt.ylabel('Real')
-plt.title('Matriz de Confusão')
+plt.title('Confusion Matrix')
 plt.show()

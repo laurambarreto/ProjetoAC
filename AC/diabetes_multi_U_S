@@ -25,16 +25,18 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, confu
 df = pd.read_csv ('diabetes_multi.csv', delimiter = ",")
 
 # Verificar dados nulos (NÃO HÁ NENHUM DADO A FALTAR)
-print("Dados em falta por coluna:")
+print("Missing data per column:")
 print(df.isnull().sum(), "\n")
 
-# Verificar duplicatas completas (linhas idênticas)
-duplicatas = df[df.duplicated(keep=False)]  # `keep=False` marca todas as ocorrências
-print(f"Número de linhas duplicadas: {len(duplicatas)}") 
+# Verificar réplicas completas (linhas idênticas)
+duplicated = df[df.duplicated(keep = False)]  # `keep = False` marca todas as ocorrências
+print(f"Number of duplicated lines: {len(duplicated)}") 
+
 # Agrupa linhas idênticas e conta ocorrências
-contagem_duplicatas = df.groupby(df.columns.tolist()).size().reset_index(name='Contagem')
+count_duplicated = df.groupby(df.columns.tolist()).size().reset_index(name = 'Count')
+
 # Mostra as linhas repetidas
-print(contagem_duplicatas.sort_values('Contagem', ascending=False))
+print(count_duplicated.sort_values('Count', ascending = False))
 
 # Remover duplicados
 df = df.drop_duplicates()
@@ -49,26 +51,26 @@ y = df.Diabetes_012
 X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
 
 # Escolher o novo tamanho alvo
-tamanho_objetivo = 80000
+objective_len = 80000
 
 # Aplica UNDERSAMPLING à classe 0
-rus = RandomUnderSampler(sampling_strategy={0: tamanho_objetivo}, random_state=42)
+rus = RandomUnderSampler(sampling_strategy={0: objective_len}, random_state = 42)
 X_rus, y_rus = rus.fit_resample(X_train, y_train)
 
 # Aplica SMOTE a tudo o que saiu do RUS para aumentar as classes 1 e 2
-smote = SMOTE(sampling_strategy={1: tamanho_objetivo, 2: tamanho_objetivo}, random_state=42)
+smote = SMOTE(sampling_strategy = {1: objective_len, 2: objective_len}, random_state = 42)
 X_train_bal, y_train_bal = smote.fit_resample(X_rus, y_rus)
 
 # Juntar tudo num novo DataFrame
-df_final = pd.concat([pd.DataFrame(X_train_bal, columns=X.columns),
-                      pd.Series(y_train_bal, name="Diabetes_012")], axis=1)
+df_final = pd.concat([pd.DataFrame(X_train_bal, columns = X.columns),
+                      pd.Series(y_train_bal, name = "Diabetes_012")], axis = 1)
 
 sns.countplot(x = "Diabetes_012",data = df_final)
-plt.title("Diabetes distribution(TRAIN)")
+plt.title("Diabetes distribution (TRAIN)")
 plt.show()
 
 ##---------- Neuronal Network ----------##
-# Create a MLP classifier
+# Criar o MLP classifier
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train_bal)
 X_test_scaled = scaler.transform(X_test)
@@ -82,16 +84,16 @@ print(f"Tempo total de treino: {tempo_total:.2f} segundos")
 
 y_pred = mlp.predict(X_test)
 
-# Evaluate the classifier
+# Avaliar o classifier
 # Macro-Average (igual peso para todas classes)
-macro_precision = precision_score(y_test, y_pred, average='macro')
-macro_recall = recall_score(y_test, y_pred, average='macro')
-macro_f1 = f1_score(y_test, y_pred, average='macro')
+macro_precision = precision_score(y_test, y_pred, average = 'macro')
+macro_recall = recall_score(y_test, y_pred, average = 'macro')
+macro_f1 = f1_score(y_test, y_pred, average = 'macro')
 
 # Weighted-Average (ponderado pelo número de amostras)
-weighted_precision = precision_score(y_test, y_pred, average='weighted')
-weighted_recall = recall_score(y_test, y_pred, average='weighted')
-weighted_f1 = f1_score(y_test, y_pred, average='weighted')
+weighted_precision = precision_score(y_test, y_pred, average = 'weighted')
+weighted_recall = recall_score(y_test, y_pred, average = 'weighted')
+weighted_f1 = f1_score(y_test, y_pred, average = 'weighted')
 
 print(classification_report(y_test, y_pred))
 print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
@@ -103,9 +105,9 @@ print(f"Weighted Recall: {weighted_recall:.4f}")
 print(f"Weighted F1-Score: {weighted_f1:.4f}\n")
 
 cm = confusion_matrix(y_test, y_pred)
-plt.figure(figsize=(8, 6))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'], yticklabels=['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'])
-plt.xlabel('Predito')
+plt.figure(figsize = (8, 6))
+sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'], yticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'])
+plt.xlabel('Predicted')
 plt.ylabel('Real')
-plt.title('Matriz de Confusão')
+plt.title('Confusion Matrix')
 plt.show()
