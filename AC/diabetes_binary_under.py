@@ -46,12 +46,17 @@ plt.title('Correlation Matrix Heatmap')
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
-sns.countplot(x = y, color='#73D7FF') 
-plt.title("Diabetes distribution", fontsize = 22)
-plt.xlabel("Diabetes", fontsize = 16)
+ax=sns.countplot(x = y, color='#73D7FF') 
+plt.title("Diabetes binary distribution", fontsize = 22)
+plt.xlabel("Diabetes_binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
 # Aumentar o tamanho dos números dos eixos
 plt.tick_params(axis='both', which='major', labelsize=13)
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis='both', zorder=0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
 plt.show()
 
 # Distribuição de diabetes e não diabetes nos dados de treino antes do undersamplimg

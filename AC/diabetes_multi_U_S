@@ -69,10 +69,17 @@ plt.show()
 
 ##---------- Neuronal Network ----------##
 # Create a MLP classifier
-mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train_bal)
+X_test_scaled = scaler.transform(X_test)
 
-# Train the classifier
-mlp.fit(X_train_bal, y_train_bal)
+mlp = MLPClassifier(hidden_layer_sizes = (64, 32, 16), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
+
+start_time=time.time()
+mlp.fit(X_train_scaled, y_train_bal)
+tempo_total = time.time() - start_time
+print(f"Tempo total de treino: {tempo_total:.2f} segundos")
+
 y_pred = mlp.predict(X_test)
 
 # Evaluate the classifier

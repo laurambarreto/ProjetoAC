@@ -79,8 +79,12 @@ X_norm = pd.DataFrame(scaler.fit_transform(X), columns = X.columns)
 pca = PCA(n_components = 2)
 X_reduced = pca.fit_transform(X_norm)
 
+# Define um array de cores fixas: ex. vermelho, verde, azul
+cores = {0: '#ffc0dc', 1: '#ffff00'}
+# Mapeia as cores com base nas classes
+cores_mapeadas = [cores[classe] for classe in y]
 #Visualizar os dados reduzidos em 2D
-plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = y, cmap = 'coolwarm', alpha = 0.5)
+plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = cores_mapeadas, alpha = 0.5)
 plt.title("Classes Reais (diabetes vs. não diabetes)")
 plt.show()
 
