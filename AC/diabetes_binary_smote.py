@@ -71,6 +71,21 @@ plt.title("Diabetes distribution (train)")
 plt.show()
 print(df['Diabetes_binary'].value_counts(), "\n")
 
+# Verificar se são linearmente separáveis
+# Normalizar os dados
+scaler = StandardScaler()
+X_norm = pd.DataFrame(scaler.fit_transform(X), columns = X.columns)
+
+# Reduzir a dimensionalidade para 2D para visualização (PCA)
+pca = PCA(n_components = 2)
+X_reduced = pca.fit_transform(X_norm)
+
+# Visualizar os dados reduzidos em 2D
+plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = y, cmap = 'coolwarm', alpha = 0.5)
+plt.title("Real classes (diabetes vs. no diabetes)")
+plt.show()
+
+
 ##---------- Pré-processamento ----------##
 # Aplicar SMOTE aos dados de treino
 smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
@@ -85,14 +100,14 @@ plt.ylim(0, 170000)
 plt.show()
 
 ##---------- Neuronal Network ----------##
-# Create a MLP classifier
-mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
+# Criar o MLP classifier
+mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001, random_state = 42)
 
-# Train the classifier
+# Treinar o classifier
 mlp.fit(X_train_SMOTE, y_train_SMOTE)
 y_pred = mlp.predict(X_test)
 
-# Evaluate the classifier
+# Avaliar o classifier
 print('Class labels:', np.unique(y_test))
 print('Misclassified samples: %d' % (y_test != y_pred).sum())
 print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))

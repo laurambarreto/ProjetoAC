@@ -71,14 +71,14 @@ plt.show()
 
 
 ##---------- Neuronal Network ----------##
-# Create a MLP classifier
+# Criar o MLP classifier
 mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
 
-# Train the classifier
-mlp.fit(X_train, y_train)
+# Treinar o classifier
+mlp.fit(X_train_under, y_train_under)
 y_pred = mlp.predict(X_test)
 
-# Evaluate the classifier
+# Avaliar o classifier
 # Macro-Average (igual peso para todas classes)
 macro_precision = precision_score(y_test, y_pred, average='macro')
 macro_recall = recall_score(y_test, y_pred, average='macro')
@@ -100,8 +100,8 @@ print(f"Weighted F1-Score: {weighted_f1:.4f}\n")
 
 cm = confusion_matrix(y_test, y_pred)
 plt.figure(figsize = (8, 6))
-sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'], yticklabels = ['Não Diabetes', 'Diabetes Tipo 1', 'Diabetes Tipo 2'])
-plt.xlabel('Previsão')
+sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'], yticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'])
+plt.xlabel('Predicted')
 plt.ylabel('Real')
-plt.title('Matriz de Confusão')
+plt.title('Confusion Matrix')
 plt.show()

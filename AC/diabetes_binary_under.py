@@ -46,14 +46,22 @@ plt.title('Correlation Matrix Heatmap')
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
-sns.countplot(x = y)
-plt.title("Diabetes distribution")
+sns.countplot(x = y, color = '#73D7FF') 
+plt.title("Diabetes distribution", fontsize = 22)
+plt.xlabel("Diabetes", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
+
+# Aumentar o tamanho dos números dos eixos
+plt.tick_params(axis = 'both', which = 'major', labelsize = 13)
 plt.show()
 
 # Distribuição de diabetes e não diabetes nos dados de treino antes do undersamplimg
 sns.countplot(x = y_train)
-plt.title("Diabetes distribution (train)")
+plt.title("Diabetes distribution (train)", fontsize = 20)
+plt.xlabel("Diabetes", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
 plt.show()
+
 print(df['Diabetes_binary'].value_counts(), "\n")
 
 ##---------- Pré-processamento ----------##
@@ -70,14 +78,14 @@ plt.ylim(0, 170000)
 plt.show()
 
 ##---------- Neuronal Network ----------##
-# Create a MLP classifier
+# Criar o MLP classifier
 mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
 
-# Train the classifier
+# Treinar the classifier
 mlp.fit(X_train_under, y_train_under)
 y_pred = mlp.predict(X_test)
 
-# Evaluate the classifier
+# Avaliar o classifier
 print('Class labels:', np.unique(y_test))
 print('Misclassified samples: %d' % (y_test != y_pred).sum())
 print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
@@ -86,4 +94,4 @@ print('Precision: %.2f' % precision_score(y_test, y_pred))
 print('F1: %.2f' % f1_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-##---------- Neuronal Network ----------##
+##---------- SVM ----------##
