@@ -41,7 +41,7 @@ print(df.info(), "\n")
 # Correlações entre todas as colunas 
 correlation_matrix = df.corr()
 plt.figure(figsize = (6, 4))
-sns.heatmap(correlation_matrix,cmap = 'coolwarm', annot = False)
+sns.heatmap(correlation_matrix, cmap = 'coolwarm', annot = False)
 plt.title('Correlation Matrix Heatmap')
 plt.show()
 
@@ -50,8 +50,10 @@ ax=sns.countplot(x = y, color='#73D7FF')
 plt.title("Diabetes multiclass distribution", fontsize = 22)
 plt.xlabel("Diabetes_012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+
 # Aumentar o tamanho dos números dos eixos
-plt.tick_params(axis='both', which='major', labelsize=13)
+plt.tick_params(axis = 'both', which = 'major', labelsize = 13)
+
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis='both', zorder=0)
 # Colocar as barras à frente da grelha
@@ -89,9 +91,9 @@ y_pred = mlp.predict(X_test)
 
 # Avaliar o classifier
 # Macro-Average (igual peso para todas classes)
-macro_precision = precision_score(y_test, y_pred, average='macro')
-macro_recall = recall_score(y_test, y_pred, average='macro')
-macro_f1 = f1_score(y_test, y_pred, average='macro')
+macro_precision = precision_score(y_test, y_pred, average = 'macro')
+macro_recall = recall_score(y_test, y_pred, average = 'macro')
+macro_f1 = f1_score(y_test, y_pred, average = 'macro')
 
 # Weighted-Average (ponderado pelo número de amostras)
 weighted_precision = precision_score(y_test, y_pred, average = 'weighted')

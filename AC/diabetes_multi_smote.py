@@ -85,12 +85,12 @@ pca = PCA(n_components = 2)
 X_reduced = pca.fit_transform(X_norm)
 
 # Define um array de cores fixas: ex. vermelho, verde, azul
-cores = {0: '#ffc0dc', 1: 'blue', 2: '#ffff00'}
+colors = {0: '#ffc0dc', 1: 'blue', 2: '#ffff00'}
 # Mapeia as cores com base nas classes
-cores_mapeadas = [cores[classe] for classe in y]
+maped_colors = [colors[classe] for classe in y]
 #Visualizar os dados reduzidos em 2D
-plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = cores_mapeadas, alpha = 0.5)
-plt.title("Classes Reais (diabetes vs. intermédio vs. não diabetes)")
+plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = maped_colors, alpha = 0.5)
+plt.title("Real classes (diabetes 1 vs. diabetes 2 vs. no diabetes)")
 plt.show()
 
 ##---------- Pré-processamento ----------##
@@ -136,7 +136,7 @@ print(f"Weighted F1-Score: {weighted_f1:.4f}\n")
 
 cm = confusion_matrix(y_test, y_pred)
 plt.figure(figsize = (8, 6))
-sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels=['No Diabetes', 'Diabetes 1', 'Diabetes 2'], yticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'])
+sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'], yticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'])
 plt.xlabel('Predicted')
 plt.ylabel('Real')
 plt.title('Confusion Matrix')
