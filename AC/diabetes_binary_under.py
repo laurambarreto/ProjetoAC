@@ -46,14 +46,21 @@ plt.title('Correlation Matrix Heatmap')
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
-sns.countplot(x = y)
-plt.title("Diabetes distribution")
+sns.countplot(x = y, color='#73D7FF') 
+plt.title("Diabetes distribution", fontsize = 22)
+plt.xlabel("Diabetes", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
+# Aumentar o tamanho dos números dos eixos
+plt.tick_params(axis='both', which='major', labelsize=13)
 plt.show()
 
 # Distribuição de diabetes e não diabetes nos dados de treino antes do undersamplimg
 sns.countplot(x = y_train)
-plt.title("Diabetes distribution (train)")
+plt.title("Diabetes distribution (train)", fontsize = 20)
+plt.xlabel("Diabetes", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
 plt.show()
+
 print(df['Diabetes_binary'].value_counts(), "\n")
 
 ##---------- Pré-processamento ----------##
@@ -86,4 +93,4 @@ print('Precision: %.2f' % precision_score(y_test, y_pred))
 print('F1: %.2f' % f1_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-##---------- Neuronal Network ----------##
+##---------- SVM ----------##

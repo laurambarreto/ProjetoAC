@@ -75,7 +75,7 @@ plt.show()
 mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
 
 # Train the classifier
-mlp.fit(X_train, y_train)
+mlp.fit(X_train_under, y_train_under)
 y_pred = mlp.predict(X_test)
 
 # Evaluate the classifier

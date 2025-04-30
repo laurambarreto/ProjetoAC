@@ -1,9 +1,11 @@
 # Import das bibliotecas necessárias
 import time
+from sklearn.decomposition import PCA
 from imblearn.over_sampling import SMOTE
 from sklearn.neural_network import MLPClassifier
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 import seaborn as sns
 from collections import Counter
 import matplotlib.pyplot as plt
@@ -70,6 +72,19 @@ sns.countplot(x = y_train)
 plt.title("Diabetes distribution (train with SMOTE)")
 plt.show()
 print(df['Diabetes_012'].value_counts(), "\n")
+
+# Verificar se são linearmente separáveis
+# Normalizar os dados
+scaler = StandardScaler()
+X_norm = pd.DataFrame(scaler.fit_transform(X), columns = X.columns)
+# Reduzir a dimensionalidade para 2D para visualização (PCA)
+pca = PCA(n_components = 2)
+X_reduced = pca.fit_transform(X_norm)
+
+#Visualizar os dados reduzidos em 2D
+#plt.scatter(X_reduced[:, 0], X_reduced[:, 1], X_reduced[:, 3], c = y, cmap = 'coolwarm', alpha = 0.5)
+#plt.title("Classes Reais (diabetes vs. intermédio vs. não diabetes)")
+#plt.show()
 
 ##---------- Pré-processamento ----------##
 # Aplicar SMOTE aos dados de treino

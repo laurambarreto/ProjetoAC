@@ -71,6 +71,20 @@ plt.title("Diabetes distribution (train)")
 plt.show()
 print(df['Diabetes_binary'].value_counts(), "\n")
 
+# Verificar se são linearmente separáveis
+# Normalizar os dados
+scaler = StandardScaler()
+X_norm = pd.DataFrame(scaler.fit_transform(X), columns = X.columns)
+# Reduzir a dimensionalidade para 2D para visualização (PCA)
+pca = PCA(n_components = 2)
+X_reduced = pca.fit_transform(X_norm)
+
+#Visualizar os dados reduzidos em 2D
+plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = y, cmap = 'coolwarm', alpha = 0.5)
+plt.title("Classes Reais (diabetes vs. não diabetes)")
+plt.show()
+
+
 ##---------- Pré-processamento ----------##
 # Aplicar SMOTE aos dados de treino
 smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
