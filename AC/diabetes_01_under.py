@@ -19,7 +19,12 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score, classification_report
 
 # Leitura do ficheiro csv com os dados
-df = pd.read_csv ('diabetes_binary.csv', delimiter = ",")
+df = pd.read_csv ('diabetes_01.csv', delimiter = ",")
+
+# Remover duplicados
+df = df.drop_duplicates()
+print("Distribution after removing duplicates:")
+print(df['Diabetes_binary'].value_counts(), "\n")
 
 # Seleção das colunas das características
 X = df.drop("Diabetes_binary", axis = 1)
@@ -43,6 +48,9 @@ correlation_matrix = df.corr()
 plt.figure(figsize = (6, 4))
 sns.heatmap(correlation_matrix,cmap = 'coolwarm', annot = False)
 plt.title('Correlation Matrix Heatmap')
+plt.xticks(ticks=np.arange(len(df.columns)) + 0.5, labels=df.columns, rotation=45, ha='right', fontsize=8)
+plt.yticks(ticks=np.arange(len(df.columns)) + 0.5, labels=df.columns, rotation=0, fontsize=8)
+plt.tight_layout()
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
@@ -52,18 +60,28 @@ plt.xlabel("Diabetes_binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
 # Aumentar o tamanho dos números dos eixos
 plt.tick_params(axis = 'both', which = 'major', labelsize = 13)
+# Definir os ticks do eixo Y de 25.000 em 25.000
+max_val = y.value_counts().max()
+plt.yticks(ticks=range(0, max_val + 25000, 25000))
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
+plt.ylim(0, 225000)
 plt.show()
 
 # Distribuição de diabetes e não diabetes nos dados de treino antes do undersamplimg
-sns.countplot(x = y_train)
+ax=sns.countplot(x = y_train, color = '#73D7FF')
 plt.title("Diabetes distribution (train)", fontsize = 20)
 plt.xlabel("Diabetes", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+plt.ylim(0, 160000)
 plt.show()
 
 print(df['Diabetes_binary'].value_counts(), "\n")

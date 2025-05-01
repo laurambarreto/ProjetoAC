@@ -19,7 +19,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score, classification_report
 
 # Leitura do ficheiro csv com os dados
-df = pd.read_csv ('diabetes_multi.csv', delimiter = ",")
+df = pd.read_csv ('diabetes_012.csv', delimiter = ",")
 
 # Seleção das colunas das características
 X = df.drop("Diabetes_012", axis = 1)
@@ -41,8 +41,11 @@ print(df.info(), "\n")
 # Correlações entre todas as colunas 
 correlation_matrix = df.corr()
 plt.figure(figsize = (6, 4))
-sns.heatmap(correlation_matrix, cmap = 'coolwarm', annot = False)
+sns.heatmap(correlation_matrix,cmap = 'coolwarm', annot = False)
 plt.title('Correlation Matrix Heatmap')
+plt.xticks(ticks=np.arange(len(df.columns)) + 0.5, labels=df.columns, rotation=45, ha='right', fontsize=8)
+plt.yticks(ticks=np.arange(len(df.columns)) + 0.5, labels=df.columns, rotation=0, fontsize=8)
+plt.tight_layout()
 plt.show()
 
 # Distribuição das três classes do dataset
@@ -50,10 +53,11 @@ ax=sns.countplot(x = y, color='#73D7FF')
 plt.title("Diabetes multiclass distribution", fontsize = 22)
 plt.xlabel("Diabetes_012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
-
 # Aumentar o tamanho dos números dos eixos
 plt.tick_params(axis = 'both', which = 'major', labelsize = 13)
-
+# Definir os ticks do eixo Y de 25.000 em 25.000
+max_val = y.value_counts().max()
+plt.yticks(ticks=range(0, max_val + 25000, 25000))
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis='both', zorder=0)
 # Colocar as barras à frente da grelha
@@ -111,7 +115,7 @@ print(f"Weighted F1-Score: {weighted_f1:.4f}\n")
 
 cm = confusion_matrix(y_test, y_pred)
 plt.figure(figsize = (8, 6))
-sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'], yticklabels = ['No Diabetes', 'Diabetes 1', 'Diabetes 2'])
+sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'], yticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'])
 plt.xlabel('Predicted')
 plt.ylabel('Real')
 plt.title('Confusion Matrix')
