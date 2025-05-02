@@ -4,6 +4,7 @@ from sklearn.neural_network import MLPClassifier
 from imblearn.under_sampling import RandomUnderSampler
 import numpy as np
 import pandas as pd
+from sklearn.svm import SVC
 import seaborn as sns
 from collections import Counter
 import matplotlib.pyplot as plt
@@ -40,7 +41,7 @@ print(df.info(), "\n")
 
 # Distribuição das três classes do dataset
 ax=sns.countplot(x = y, color='#73D7FF') 
-plt.title("Diabetes multiclass distribution", fontsize = 22)
+plt.title("Diabetes multiclass distribution before", fontsize = 22)
 plt.xlabel("Diabetes_012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
 # Aumentar o tamanho dos números dos eixos
