@@ -45,7 +45,7 @@ print(df.info(), "\n")
 
 # Distribuição de diabetes e não diabetes do dataset
 ax=sns.countplot(x = y, color = '#73D7FF') 
-plt.title("Diabetes binary distribution", fontsize = 22)
+plt.title("Diabetes binary distribution", fontsize = 20)
 plt.xlabel("Diabetes_binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
 # Aumentar o tamanho dos números dos eixos
@@ -64,7 +64,7 @@ plt.show()
 # Distribuição de diabetes e não diabetes nos dados de treino antes do undersamplimg
 ax=sns.countplot(x = y_train, color = '#73D7FF')
 plt.title("Diabetes distribution (train)", fontsize = 20)
-plt.xlabel("Diabetes", fontsize = 16)
+plt.xlabel("Diabetes binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
@@ -82,11 +82,16 @@ undersampler = RandomUnderSampler(sampling_strategy = 'auto', random_state = 42)
 X_train_under, y_train_under = undersampler.fit_resample(X_train, y_train)
 
 # Distribuição de diabetes e não diabetes nos dados de treino com undersampling
-sns.countplot(x = y_train_under)
+ax=sns.countplot(x = y_train_under, color = '#73D7FF')
 plt.title("Diabetes distribution (train with undersampling)", fontsize = 18)
-plt.xlabel("Diabetes", fontsize = 14)
+plt.xlabel("Diabetes binary", fontsize = 14)
 plt.ylabel("Count", fontsize = 14)
-plt.ylim(0, 170000)
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+plt.ylim(0, 160000)
 plt.show()
 
 ##---------- Neuronal Network ----------##

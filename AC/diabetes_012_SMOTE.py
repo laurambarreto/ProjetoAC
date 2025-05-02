@@ -75,10 +75,19 @@ sns.countplot(x = y)
 plt.title("Diabetes distribution")
 plt.show()
 
-# Distribuição dos dados de treino antes do SMOTE
-sns.countplot(x = y_train)
-plt.title("Diabetes distribution (train with SMOTE)")
+# Distribuição de diabetes e não diabetes nos dados de treino depois do SMOTE 
+ax=sns.countplot(x = y_train, color = '#73D7FF')
+plt.title("Diabetes distribution (train)", fontsize = 20)
+plt.xlabel("Diabetes 012", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+plt.ylim(0, 160000)
 plt.show()
+
 print(df['Diabetes_012'].value_counts(), "\n")
 
 # Verificar se são linearmente separáveis
@@ -110,13 +119,19 @@ plt.show()
 smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
 X_train_SMOTE, y_train_SMOTE = smote.fit_resample(X_train, y_train)
 
-# Distribuição de diabetes e não diabetes nos dados de treino com SMOTE
-sns.countplot(x = y_train_SMOTE)
-plt.title("Diabetes distribution (train with SMOTE)", fontsize = 18)
-plt.xlabel("Diabetes", fontsize = 14)
-plt.ylabel("Count", fontsize = 14)
-plt.ylim(0, 170000)
+# Distribuição de diabetes e não diabetes nos dados de treino depois do SMOTE 
+ax=sns.countplot(x = y_train_SMOTE, color = '#73D7FF')
+plt.title("Diabetes distribution (train with SMOTE)", fontsize = 20)
+plt.xlabel("Diabetes 012", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+plt.ylim(0, 160000)
 plt.show()
+
 
 ##---------- Neuronal Network ----------##
 # Criar o MLP classifier

@@ -37,7 +37,16 @@ print(count_duplicated.sort_values('Count', ascending = False))
 
 # Remover duplicados
 df = df.drop_duplicates()
-
+df_l0 = df[df['Diabetes_binary'] == 0]  # classe maioritária
+df_l1 = df[df['Diabetes_binary'] == 1]  # classe minoritária
+# Calcular IQR e remover outliers **apenas** da classe 0
+Q1 = df_l0.quantile(0.25)
+Q3 = df_l0.quantile(0.75)
+IQR = Q3 - Q1
+cond = ~((df_l0 < (Q1 - 1.5 * IQR)) | (df_l0 > (Q3 + 1.5 * IQR))).any(axis=1)
+df_l0_clean = df_l0[cond]
+# Juntar as duas classes
+df = pd.concat([df_l0_clean, df_l1], axis=0)
 
 # Seleção das colunas das características
 X = df.drop("Diabetes_binary", axis = 1)
@@ -109,13 +118,19 @@ print(f"Variância explicada pelas 2 primeiras componentes: {var_2:.4f}")
 smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
 X_train_SMOTE, y_train_SMOTE = smote.fit_resample(X_train, y_train)
 
-# Distribuição de diabetes e não diabetes nos dados de treino com SMOTE
-sns.countplot(x = y_train_SMOTE)
-plt.title("Diabetes distribution (train with SMOTE)", fontsize = 18)
-plt.xlabel("Diabetes", fontsize = 14)
-plt.ylabel("Count", fontsize = 14)
-plt.ylim(0, 170000)
+# Distribuição de diabetes e não diabetes nos dados de treino depois do SMOTE 
+ax=sns.countplot(x = y_train_SMOTE, color = '#73D7FF')
+plt.title("Diabetes distribution (train with SMOTE)", fontsize = 20)
+plt.xlabel("Diabetes binary", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+plt.ylim(0, 160000)
 plt.show()
+
 
 ##---------- Neuronal Network ----------##
 # Criar o MLP classifier
@@ -127,9 +142,7 @@ y_pred = mlp.predict(X_test)
 
 # Avaliar o classifier
 print('Class labels:', np.unique(y_test))
-print('Misclassified samples: %d' % (y_test != y_pred).sum())
 print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
 print('Recall: %.2f' % recall_score(y_test, y_pred))
 print('Precision: %.2f' % precision_score(y_test, y_pred))
 print('F1: %.2f' % f1_score(y_test, y_pred))
-print(classification_report(y_test, y_pred))
