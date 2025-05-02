@@ -1,5 +1,6 @@
 # Import das bibliotecas necessárias
 import time
+from sklearn.svm import SVC
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.neural_network import MLPClassifier
 import numpy as np
@@ -20,11 +21,6 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, confu
 
 # Leitura do ficheiro csv com os dados
 df = pd.read_csv ('diabetes_01.csv', delimiter = ",")
-
-# Remover duplicados
-df = df.drop_duplicates()
-print("Distribution after removing duplicates:")
-print(df['Diabetes_binary'].value_counts(), "\n")
 
 # Seleção das colunas das características
 X = df.drop("Diabetes_binary", axis = 1)
@@ -55,7 +51,7 @@ plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
 ax=sns.countplot(x = y, color = '#73D7FF') 
-plt.title("Diabetes binary distribution", fontsize = 20)
+plt.title("Diabetes binary distribution before", fontsize = 20)
 plt.xlabel("Diabetes_binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
 # Aumentar o tamanho dos números dos eixos
@@ -71,9 +67,35 @@ for bar in ax.patches:
 plt.ylim(0, 225000)
 plt.show()
 
+
+
+print(df['Diabetes_binary'].value_counts(), "\n")
+
+##---------- Pré-processamento ----------##
+# Remover duplicados
+df = df.drop_duplicates()
+print("Distribution after removing duplicates:")
+print(df['Diabetes_binary'].value_counts(), "\n")
+
+df_l0 = df[df['Diabetes_binary'] == 0]  # classe maioritária
+df_l1 = df[df['Diabetes_binary'] == 1]  # classe minoritária
+# Calcular IQR e remover outliers **apenas** da classe 0
+Q1 = df_l0.quantile(0.25)
+Q3 = df_l0.quantile(0.75)
+IQR = Q3 - Q1
+cond = ~((df_l0 < (Q1 - 1.5 * IQR)) | (df_l0 > (Q3 + 1.5 * IQR))).any(axis=1)
+df_l0_clean = df_l0[cond]
+# Juntar as duas classes
+df = pd.concat([df_l0_clean, df_l1], axis=0)
+
+# Seleção das colunas das características
+X = df.drop("Diabetes_binary", axis = 1)
+# Seleção da coluna target
+y = df.Diabetes_binary
+
 # Distribuição de diabetes e não diabetes nos dados de treino antes do undersamplimg
-ax=sns.countplot(x = y_train, color = '#73D7FF')
-plt.title("Diabetes distribution (train)", fontsize = 20)
+ax=sns.countplot(x = y, color = '#73D7FF')
+plt.title("Diabetes binary distribution after", fontsize = 20)
 plt.xlabel("Diabetes binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
 # Colocar grelha nos dois eixos, atrás das barras
@@ -81,12 +103,12 @@ plt.grid(True, axis = 'both', zorder = 0)
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
-plt.ylim(0, 160000)
+plt.ylim(0, 225000)
 plt.show()
 
-print(df['Diabetes_binary'].value_counts(), "\n")
+# Divisão em conjunto de treino e de teste
+X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
 
-##---------- Pré-processamento ----------##
 # Reduzir o número de exemplos da classe dominante (undersampling) nos dados de treino
 undersampler = RandomUnderSampler(sampling_strategy = 'auto', random_state = 42)
 X_train_under, y_train_under = undersampler.fit_resample(X_train, y_train)
