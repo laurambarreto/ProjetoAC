@@ -43,16 +43,6 @@ def metricas(y_pred, y_true):
 # Informações sobre o Dataset
 print(df.info(), "\n")
 
-# Correlações entre todas as colunas 
-correlation_matrix = df.corr()
-plt.figure(figsize = (6, 4))
-sns.heatmap(correlation_matrix,cmap = 'coolwarm', annot = False)
-plt.title('Correlation Matrix Heatmap')
-plt.xticks(ticks=np.arange(len(df.columns)) + 0.5, labels=df.columns, rotation=45, ha='right', fontsize=8)
-plt.yticks(ticks=np.arange(len(df.columns)) + 0.5, labels=df.columns, rotation=0, fontsize=8)
-plt.tight_layout()
-plt.show()
-
 # Distribuição de diabetes e não diabetes do dataset
 ax=sns.countplot(x = y, color = '#73D7FF') 
 plt.title("Diabetes binary distribution", fontsize = 22)

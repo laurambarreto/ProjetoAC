@@ -42,6 +42,7 @@ print(count_duplicated.sort_values('Count', ascending = False))
 df = df.drop_duplicates()
 print("Distribution after removing duplicates:")
 print(df['Diabetes_012'].value_counts(), "\n")
+
 # Seleção das colunas das características
 X = df.drop("Diabetes_012", axis = 1)
 
@@ -64,6 +65,9 @@ correlation_matrix = df.corr()
 plt.figure(figsize = (6, 4))
 sns.heatmap(correlation_matrix,cmap = 'coolwarm', annot = False)
 plt.title('Correlation Matrix Heatmap')
+plt.xticks(ticks = np.arange(len(df.columns)) + 0.5, labels = df.columns, rotation = 45, ha = 'right', fontsize = 8)
+plt.yticks(ticks = np.arange(len(df.columns)) + 0.5, labels = df.columns, rotation = 0, fontsize = 8)
+plt.tight_layout()
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
@@ -85,11 +89,14 @@ X_norm = pd.DataFrame(scaler.fit_transform(X), columns = X.columns)
 # Reduzir a dimensionalidade para 2D para visualização (PCA)
 pca = PCA(n_components = 2)
 X_reduced = pca.fit_transform(X_norm)
+
 # Define um array de cores fixas: ex. vermelho, verde, azul
 colors = {0: '#ffc0dc', 1: 'blue', 2: '#ffff00'}
+
 # Mapeia as cores com base nas classes
 maped_colors = [colors[classe] for classe in y]
 legenda_cores = [Patch(color = cor, label = f'Class {classe}') for classe, cor in colors.items()]
+
 # Visualizar os dados reduzidos em 2D
 plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = maped_colors, alpha = 0.5)
 plt.title("Real classes (0 vs. 1 vs. 2)", fontsize = 18)

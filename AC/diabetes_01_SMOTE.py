@@ -29,7 +29,7 @@ print(df.isnull().sum(), "\n")
 
 # Verificar duplicatas completas (linhas idênticas)
 duplicated = df[df.duplicated(keep = False)]  # `keep = False` marca todas as ocorrências
-print(f"Número de linhas duplicadas: {len(duplicated)}") 
+print(f"Number of duplicated lines: {len(duplicated)}") 
 # Agrupa linhas idênticas e conta ocorrências
 count_duplicated = df.groupby(df.columns.tolist()).size().reset_index(name = 'Count')
 # Mostra as linhas repetidas
@@ -61,6 +61,9 @@ correlation_matrix = df.corr()
 plt.figure(figsize = (6, 4))
 sns.heatmap(correlation_matrix,cmap = 'coolwarm', annot = False)
 plt.title('Correlation Matrix Heatmap')
+plt.xticks(ticks = np.arange(len(df.columns)) + 0.5, labels = df.columns, rotation = 45, ha = 'right', fontsize = 8)
+plt.yticks(ticks = np.arange(len(df.columns)) + 0.5, labels = df.columns, rotation = 0, fontsize = 8)
+plt.tight_layout()
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
