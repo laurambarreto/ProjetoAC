@@ -39,14 +39,15 @@ print(count_duplicated.sort_values('Count', ascending = False))
 df = df.drop_duplicates()
 df_l0 = df[df['Diabetes_binary'] == 0]  # classe maioritária
 df_l1 = df[df['Diabetes_binary'] == 1]  # classe minoritária
+
 # Calcular IQR e remover outliers **apenas** da classe 0
 Q1 = df_l0.quantile(0.25)
 Q3 = df_l0.quantile(0.75)
 IQR = Q3 - Q1
-cond = ~((df_l0 < (Q1 - 1.5 * IQR)) | (df_l0 > (Q3 + 1.5 * IQR))).any(axis=1)
+cond = ~((df_l0 < (Q1 - 1.5 * IQR)) | (df_l0 > (Q3 + 1.5 * IQR))).any(axis = 1)
 df_l0_clean = df_l0[cond]
 # Juntar as duas classes
-df = pd.concat([df_l0_clean, df_l1], axis=0)
+df = pd.concat([df_l0_clean, df_l1], axis = 0)
 
 # Seleção das colunas das características
 X = df.drop("Diabetes_binary", axis = 1)
@@ -97,10 +98,13 @@ X_reduced = pca.fit_transform(X_norm)
 
 # Define um array de cores fixas: ex. vermelho, verde, azul
 colors = {0: '#ffc0dc', 1: '#ffff00'}
+
 # Mapeia as cores com base nas classes
 maped_colors = [colors[classe] for classe in y]
+
 # Cria os elementos da legenda manualmente
-legenda_cores = [Patch(color=cor, label=f'Class {classe}') for classe, cor in colors.items()]
+legenda_cores = [Patch(color = cor, label = f'Class {classe}') for classe, cor in colors.items()]
+ 
 # Visualizar os dados reduzidos em 2D
 plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c = maped_colors, alpha = 0.5)
 plt.title("Real classes (0 vs. 1)", fontsize=18)
