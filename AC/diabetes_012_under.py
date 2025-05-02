@@ -76,12 +76,17 @@ print(df['Diabetes_012'].value_counts(), "\n")
 undersampler = RandomUnderSampler(sampling_strategy = 'auto', random_state = 42)
 X_train_under, y_train_under = undersampler.fit_resample(X_train, y_train)
 
-# Distribuição de diabetes e não diabetes nos dados de treino com underSampling
-sns.countplot(x = y_train_under)
-plt.title("Diabetes distribution (train with underSampling)", fontsize = 18)
-plt.xlabel("Diabetes", fontsize = 14)
-plt.ylabel("Count", fontsize = 14)
-plt.ylim(0, 170000)
+# Distribuição de diabetes e não diabetes nos dados de treino depois do SMOTE 
+ax=sns.countplot(x = y_train_under, color = '#73D7FF')
+plt.title("Diabetes distribution (train with underSampling)", fontsize = 20)
+plt.xlabel("Diabetes 012", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+plt.ylim(0, 160000)
 plt.show()
 
 

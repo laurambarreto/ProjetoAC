@@ -65,9 +65,19 @@ X_train_bal, y_train_bal = smote.fit_resample(X_rus, y_rus)
 df_final = pd.concat([pd.DataFrame(X_train_bal, columns = X.columns),
                       pd.Series(y_train_bal, name = "Diabetes_012")], axis = 1)
 
-sns.countplot(x = "Diabetes_012",data = df_final)
-plt.title("Diabetes distribution (TRAIN)")
+# Distribuição de diabetes e não diabetes nos dados de treino depois do SMOTE 
+ax=sns.countplot(x = y_train_bal, color = '#73D7FF')
+plt.title("Diabetes distribution (train with SMOTE + under)", fontsize = 20)
+plt.xlabel("Diabetes 012", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+plt.ylim(0, 160000)
 plt.show()
+
 
 ##---------- Neuronal Network ----------##
 # Criar o MLP classifier
