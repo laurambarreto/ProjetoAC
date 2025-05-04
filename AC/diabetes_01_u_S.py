@@ -2,6 +2,7 @@
 import time
 from sklearn.svm import SVC
 from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE
 from sklearn.neural_network import MLPClassifier
 import numpy as np
 import pandas as pd
@@ -35,7 +36,7 @@ X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, ran
 def metricas(y_pred, y_true):
     return accuracy_score(y_true, y_pred), recall_score(y_true, y_pred), precision_score(y_true, y_pred)
 
-##---------- Análise inicial ----------##
+##---------- ANÁLISE INICIAL ----------##
 # Informações sobre o Dataset
 print(df.info(), "\n")
 
@@ -61,9 +62,11 @@ for bar in ax.patches:
 plt.ylim(0, 225000)
 plt.show()
 
+
+
 print(df['Diabetes_binary'].value_counts(), "\n")
 
-##---------- Pré-processamento ----------##
+##---------- PRÉ-PROCESSAMENTO ----------##
 # Remover duplicados
 df = df.drop_duplicates()
 print("Distribution after removing duplicates:")
@@ -106,12 +109,24 @@ plt.show()
 X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
 
 # Reduzir o número de exemplos da classe dominante (undersampling) nos dados de treino
-undersampler = RandomUnderSampler(sampling_strategy = 'auto', random_state = 42)
-X_train_under, y_train_under = undersampler.fit_resample(X_train, y_train)
+# Escolher o novo tamanho alvo
+objective_len = 40000
+
+# Aplica UNDERSAMPLING à classe 0
+rus = RandomUnderSampler(sampling_strategy = {0: objective_len}, random_state = 42)
+X_rus, y_rus = rus.fit_resample(X_train, y_train)
+
+# Aplica SMOTE a tudo o que saiu do RUS para aumentar as classes 1 e 2
+smote = SMOTE(sampling_strategy = {1: objective_len}, random_state = 42)
+X_train_bal, y_train_bal = smote.fit_resample(X_rus, y_rus)
+
+# Juntar tudo num novo DataFrame
+df_final = pd.concat([pd.DataFrame(X_train_bal, columns = X.columns),
+                      pd.Series(y_train_bal, name = "Diabetes_01")], axis = 1)
 
 # Distribuição de diabetes e não diabetes nos dados de treino com undersampling
-ax = sns.countplot(x = y_train_under, color = '#73D7FF')
-plt.title("Diabetes distribution (balanced with undersampling)", fontsize = 20)
+ax  = sns.countplot(x = y_train_bal, color = '#73D7FF')
+plt.title("Diabetes distribution (balanced with SMOTE + under)", fontsize = 20)
 plt.xlabel("Diabetes binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
 
@@ -127,16 +142,16 @@ plt.show()
 ##---------- MODELIZAÇÃO ----------##
 # Normalizar os dados
 scaler = StandardScaler()
-X_train_scaled_under = scaler.fit_transform(X_train_under)
+X_train_scaled_bal = scaler.fit_transform(X_train_bal)
 X_test_scaled = scaler.transform(X_test)
 
-##---------- REDES NEURONAIS ----------##
+#---------- REDES NEURONAIS ----------#
 # Criar o MLP classifier
-mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001, random_state = 42)
+mlp = MLPClassifier(hidden_layer_sizes = (10,5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001, random_state = 42)
 
 # Para contar o tempo de treino
 start_time = time.time()
-mlp.fit(X_train_scaled_under, y_train_under)
+mlp.fit(X_train_scaled_bal, y_train_bal)
 time_total = time.time() - start_time
 print(f"Total training time: {time_total:.2f} seconds")
 
@@ -144,12 +159,16 @@ print(f"Total training time: {time_total:.2f} seconds")
 y_pred_mlp = mlp.predict(X_test_scaled)
 
 # Avaliar o classifier
+# Macro-Average (igual peso para todas classes)
+macro_precision = precision_score(y_test, y_pred_mlp, average = 'macro')
+macro_recall = recall_score(y_test, y_pred_mlp, average = 'macro')
+macro_f1 = f1_score(y_test, y_pred_mlp, average = 'macro')
+
 print ("MLP CLASSIFIER RESULTS")
-print('Class labels:', np.unique(y_test))
 print('Accuracy: %.2f' % accuracy_score(y_test, y_pred_mlp))
-print('Recall: %.2f' % recall_score(y_test, y_pred_mlp))
-print('Precision: %.2f' % precision_score(y_test, y_pred_mlp))
-print('F1: %.2f' % f1_score(y_test, y_pred_mlp))
+print(f"Macro Precision: {macro_precision:.4f}")
+print(f"Macro Recall: {macro_recall:.4f}")
+print(f"Macro F1-Score: {macro_f1:.4f}\n")
 print(classification_report(y_test, y_pred_mlp))
 
 # Matriz de confusão do classificador MLP
@@ -161,17 +180,17 @@ plt.ylabel('Real')
 plt.title('Confusion Matrix - Using MLP classifier')
 plt.show()
 
-##---------- SVM ----------##
+#---------- SVM ----------# 
 # Criar e treinar o modelo SVM
-svm = SVC(kernel = 'linear')  # Podemos usar 'rbf', 'poly', entre outros
+svm = SVC(kernel = 'linear')  # Pode usar 'rbf', 'poly', etc.
 
 # Para contar o tempo de treino
 start_time = time.time()
-svm.fit(X_train_scaled_under, y_train_under)
+svm.fit(X_train_scaled_bal, y_train_bal)
 time_total = time.time() - start_time
 print(f"Total training time: {time_total:.2f} seconds")
 
-# Fazer previsões
+# Previsões
 y_pred_svm = svm.predict(X_test_scaled)
 
 # Avaliar o modelo SVM

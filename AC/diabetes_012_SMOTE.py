@@ -102,17 +102,21 @@ print(df['Diabetes_012'].value_counts(), "\n")
 df_l0 = df[df['Diabetes_012'] == 0]  # classe maioritária
 df_l1 = df[df['Diabetes_012'] == 1]  # classe minoritária
 df_l2 = df[df['Diabetes_012'] == 2]  # classe minoritária
+
 # Calcular IQR e remover outliers **apenas** da classe 0
 Q1 = df_l0.quantile(0.25)
 Q3 = df_l0.quantile(0.75)
 IQR = Q3 - Q1
 cond = ~((df_l0 < (Q1 - 1.5 * IQR)) | (df_l0 > (Q3 + 1.5 * IQR))).any(axis=1)
 df_l0_clean = df_l0[cond]
+
 # Juntar as duas classes
 df = pd.concat([df_l0_clean, df_l1,df_l2], axis=0)
 print(df['Diabetes_012'].value_counts(), "\n")
+
 # Seleção das colunas das características
 X = df.drop("Diabetes_012", axis = 1)
+
 # Seleção da coluna target
 y = df.Diabetes_012
 
@@ -121,8 +125,10 @@ ax=sns.countplot(x = y, color = '#73D7FF')
 plt.title("Diabetes multiclass distribution after", fontsize = 20)
 plt.xlabel("Diabetes 012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
+
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
@@ -138,7 +144,7 @@ X_train_SMOTE, y_train_SMOTE = smote.fit_resample(X_train, y_train)
 
 # Distribuição de diabetes e não diabetes nos dados de treino depois do SMOTE 
 ax=sns.countplot(x = y_train_SMOTE, color = '#73D7FF')
-plt.title("Diabetes distribution (train with SMOTE)", fontsize = 20)
+plt.title("Diabetes multiclass distribution (SMOTE)", fontsize = 20)
 plt.xlabel("Diabetes 012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
 # Colocar grelha nos dois eixos, atrás das barras
@@ -156,32 +162,74 @@ mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 
 
 # Treinar o classifier
 mlp.fit(X_train_SMOTE, y_train_SMOTE)
-y_pred = mlp.predict(X_test)
+y_pred_mlp = mlp.predict(X_test)
 
 # Avaliar o classifier
 # Macro-Average (igual peso para todas classes)
-macro_precision = precision_score(y_test, y_pred, average = 'macro')
-macro_recall = recall_score(y_test, y_pred, average = 'macro')
-macro_f1 = f1_score(y_test, y_pred, average = 'macro')
+macro_precision = precision_score(y_test, y_pred_mlp, average = 'macro')
+macro_recall = recall_score(y_test, y_pred_mlp, average = 'macro')
+macro_f1 = f1_score(y_test, y_pred_mlp, average = 'macro')
 
 # Weighted-Average (ponderado pelo número de amostras)
-weighted_precision = precision_score(y_test, y_pred, average = 'weighted')
-weighted_recall = recall_score(y_test, y_pred, average = 'weighted')
-weighted_f1 = f1_score(y_test, y_pred, average = 'weighted')
+weighted_precision = precision_score(y_test, y_pred_mlp, average = 'weighted')
+weighted_recall = recall_score(y_test, y_pred_mlp, average = 'weighted')
+weighted_f1 = f1_score(y_test, y_pred_mlp, average = 'weighted')
 
-print(classification_report(y_test, y_pred))
-print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
+print('Accuracy: %.2f' % accuracy_score(y_test, y_pred_mlp))
 print(f"Macro Precision: {macro_precision:.4f}")
 print(f"Macro Recall: {macro_recall:.4f}")
 print(f"Macro F1-Score: {macro_f1:.4f}\n")
 print(f"Weighted Precision: {weighted_precision:.4f}")
 print(f"Weighted Recall: {weighted_recall:.4f}")
 print(f"Weighted F1-Score: {weighted_f1:.4f}\n")
+print(classification_report(y_test, y_pred_mlp))
 
-cm = confusion_matrix(y_test, y_pred)
+cm = confusion_matrix(y_test, y_pred_mlp)
 plt.figure(figsize = (8, 6))
 sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'], yticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'])
 plt.xlabel('Predicted')
 plt.ylabel('Real')
-plt.title('Confusion Matrix')
+plt.title('Confusion Matrix - Using MLP classifier')
+plt.show()
+
+##---------- SVM ----------## 
+# Normalizar os dados
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Criar e treinar o modelo SVM
+svm = SVC(kernel = 'linear')  # Pode usar 'rbf', 'poly', etc.
+svm.fit(X_train, y_train)
+
+# Fazer previsões
+y_pred_svm = svm.predict(X_test)
+
+# Avaliar o modelo SVM
+# Macro-Average (igual peso para todas classes)
+macro_precision = precision_score(y_test, y_pred_svm, average = 'macro')
+macro_recall = recall_score(y_test, y_pred_svm, average = 'macro')
+macro_f1 = f1_score(y_test, y_pred_svm, average = 'macro')
+
+# Weighted-Average (ponderado pelo número de amostras)
+weighted_precision = precision_score(y_test, y_pred_svm, average = 'weighted')
+weighted_recall = recall_score(y_test, y_pred_svm, average = 'weighted')
+weighted_f1 = f1_score(y_test, y_pred_svm, average = 'weighted')
+
+print ("SVM RESULTS")
+print('Accuracy: %.2f' % accuracy_score(y_test, y_pred_svm))
+print(f"Macro Precision: {macro_precision:.4f}")
+print(f"Macro Recall: {macro_recall:.4f}")
+print(f"Macro F1-Score: {macro_f1:.4f}\n")
+print(f"Weighted Precision: {weighted_precision:.4f}")
+print(f"Weighted Recall: {weighted_recall:.4f}")
+print(f"Weighted F1-Score: {weighted_f1:.4f}\n")
+print(classification_report(y_test, y_pred_svm))
+
+cm = confusion_matrix(y_test, y_pred_svm)
+plt.figure(figsize = (8, 6))
+sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'], yticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'])
+plt.xlabel('Predicted')
+plt.ylabel('Real')
+plt.title('Confusion Matrix - Using SVM')
 plt.show()

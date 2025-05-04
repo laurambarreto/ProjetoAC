@@ -87,32 +87,62 @@ mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 
 
 # Treinar o classifier
 mlp.fit(X_train_under, y_train_under)
-y_pred = mlp.predict(X_test)
+y_pred_mlp = mlp.predict(X_test)
 
 # Avaliar o classifier
 # Macro-Average (igual peso para todas classes)
-macro_precision = precision_score(y_test, y_pred, average = 'macro')
-macro_recall = recall_score(y_test, y_pred, average = 'macro')
-macro_f1 = f1_score(y_test, y_pred, average = 'macro')
+macro_precision = precision_score(y_test, y_pred_mlp, average = 'macro')
+macro_recall = recall_score(y_test, y_pred_mlp, average = 'macro')
+macro_f1 = f1_score(y_test, y_pred_mlp, average = 'macro')
 
 # Weighted-Average (ponderado pelo número de amostras)
-weighted_precision = precision_score(y_test, y_pred, average = 'weighted')
-weighted_recall = recall_score(y_test, y_pred, average = 'weighted')
-weighted_f1 = f1_score(y_test, y_pred, average = 'weighted')
+weighted_precision = precision_score(y_test, y_pred_mlp, average = 'weighted')
+weighted_recall = recall_score(y_test, y_pred_mlp, average = 'weighted')
+weighted_f1 = f1_score(y_test, y_pred_mlp, average = 'weighted')
 
-print(classification_report(y_test, y_pred))
-print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
+print('Accuracy: %.2f' % accuracy_score(y_test, y_pred_mlp))
 print(f"Macro Precision: {macro_precision:.4f}")
 print(f"Macro Recall: {macro_recall:.4f}")
 print(f"Macro F1-Score: {macro_f1:.4f}\n")
 print(f"Weighted Precision: {weighted_precision:.4f}")
 print(f"Weighted Recall: {weighted_recall:.4f}")
 print(f"Weighted F1-Score: {weighted_f1:.4f}\n")
+print(classification_report(y_test, y_pred_mlp))
 
-cm = confusion_matrix(y_test, y_pred)
+cm = confusion_matrix(y_test, y_pred_mlp)
 plt.figure(figsize = (8, 6))
 sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'], yticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'])
 plt.xlabel('Predicted')
 plt.ylabel('Real')
-plt.title('Confusion Matrix')
+plt.title('Confusion Matrix - Using MLP classifier')
+plt.show()
+
+##---------- SVM ----------## 
+# Normalizar os dados
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Criar e treinar o modelo SVM
+svm = SVC(kernel = 'linear')  # Pode usar 'rbf', 'poly', etc.
+svm.fit(X_train, y_train)
+
+# Fazer previsões
+y_pred_svm = svm.predict(X_test)
+
+# Avaliar o modelo SVM
+print ("SVM RESULTS")
+print('Class labels:', np.unique(y_test))
+print('Accuracy: %.2f' % accuracy_score(y_test, y_pred_svm))
+print('Recall: %.2f' % recall_score(y_test, y_pred_svm))
+print('Precision: %.2f' % precision_score(y_test, y_pred_svm))
+print('F1: %.2f' % f1_score(y_test, y_pred_svm))
+print(classification_report(y_test, y_pred_svm))
+
+cm = confusion_matrix(y_test, y_pred_svm)
+plt.figure(figsize = (8, 6))
+sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'], yticklabels = ['No Diabetes', 'Prediabetes', 'Diabetes'])
+plt.xlabel('Predicted')
+plt.ylabel('Real')
+plt.title('Confusion Matrix - Using SVM')
 plt.show()
