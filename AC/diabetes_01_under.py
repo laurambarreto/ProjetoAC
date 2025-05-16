@@ -18,6 +18,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
 from sklearn.cluster import KMeans
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score, classification_report
+import optuna
 
 # Leitura do ficheiro csv com os dados
 df = pd.read_csv ('diabetes_01.csv', delimiter = ",")
@@ -162,29 +163,65 @@ plt.title('Confusion Matrix - Using MLP classifier')
 plt.show()
 
 ##---------- SVM ----------##
-# Criar e treinar o modelo SVM
-svm = SVC(kernel = 'linear')  # Podemos usar 'rbf', 'poly', entre outros
+def objective(trial):
+    kernel = trial.suggest_categorical('kernel', ['linear', 'rbf', 'poly', 'sigmoid'])
+    C = trial.suggest_float('C', 1e-3, 1e3, log=True)
+    max_iter = trial.suggest_int('max_iter', 100, 1000)
+    
+    if kernel == 'poly':
+        degree = trial.suggest_int('degree', 2, 5)
+    else:
+        degree = 3
+    
+    svm = SVC(kernel=kernel, C=C, degree=degree, max_iter=max_iter)
+    svm.fit(X_train, y_train)
+    preds = svm.predict(X_train)
+    score = f1_score(y_train, preds, average='weighted')
+    return score
 
-# Para contar o tempo de treino
-start_time = time.time()
-svm.fit(X_train_scaled_under, y_train_under)
-time_total = time.time() - start_time
-print(f"Total training time: {time_total:.2f} seconds")
+# Criar o estudo Optuna
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=30)
 
-# Fazer previsões
-y_pred_svm = svm.predict(X_test_scaled)
+print(f"Melhor trial: {study.best_trial.params}")
+print(f"Melhor F1-score na validação: {study.best_value:.4f}")
+
+# Treinar o melhor modelo com os dados de treino + validação
+best_params = study.best_trial.params
+
+#Definir degree corretamente
+degree = best_params['degree'] if best_params['kernel'] == 'poly' else 3
+
+best_svm = SVC(
+    kernel=best_params['kernel'],
+    C=best_params['C'],
+    degree=degree,
+    max_iter=best_params['max_iter']
+)
+
+# Treinar com treino + validação
+X_train_val = np.concatenate((X_train, X_val), axis=0)
+y_train_val = np.concatenate((y_train, y_val), axis=0)
+
+best_svm.fit(X_train_val, y_train_val)
+
+# Avaliar no teste
+test_preds = best_svm.predict(X_test)
+test_f1 = f1_score(y_test, test_preds, average='weighted')
+
+print(f"F1-score no conjunto de teste: {test_f1:.4f}")
 
 # Avaliar o modelo SVM
 print ("SVM RESULTS")
 print('Class labels:', np.unique(y_test))
-print('Accuracy: %.2f' % accuracy_score(y_test, y_pred_svm))
-print('Recall: %.2f' % recall_score(y_test, y_pred_svm))
-print('Precision: %.2f' % precision_score(y_test, y_pred_svm))
-print('F1: %.2f' % f1_score(y_test, y_pred_svm))
-print(classification_report(y_test, y_pred_svm))
+print('Accuracy: %.2f' % accuracy_score(y_test, test_preds))
+print('Recall: %.2f' % recall_score(y_test, test_preds))
+print('Precision: %.2f' % precision_score(y_test, test_preds))
+print('F1: %.2f' % f1_score(y_test, test_preds))
+print(classification_report(y_test, test_preds))
 
 # Matriz de confusão do método SVM
-cm = confusion_matrix(y_test, y_pred_svm)
+cm = confusion_matrix(y_test, test_preds)
 plt.figure(figsize = (8, 6))
 sns.heatmap(cm, annot = True, fmt = 'd', cmap = 'Blues', xticklabels = ['No Diabetes', 'Diabetes'], yticklabels = ['No Diabetes','Diabetes'])
 plt.xlabel('Predicted')
