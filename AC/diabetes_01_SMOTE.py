@@ -52,8 +52,15 @@ plt.tight_layout()
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
-sns.countplot(x = y, color = '#73D7FF')
-plt.title("Diabetes distribution")
+ax = sns.countplot(x = y, color = '#73D7FF')
+plt.title("Diabetes distribution before")
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+
+plt.ylim(0, 225000)
 plt.show()
 
 # Verificar se são linearmente separáveis
@@ -118,6 +125,7 @@ df = pd.concat([df_l0_clean, df_l1], axis = 0)
 X = df.drop("Diabetes_binary", axis = 1)
 y = df.Diabetes_binary
 
+<<<<<<< HEAD
 # EM 3D DEPOIS DE TIRAR OUTLIERS E DUPLICADOS
 X_norm = pd.DataFrame(scaler.fit_transform(X), columns = X.columns)
 # Reduzir a dimensionalidade para 2D para visualização (PCA)
@@ -160,14 +168,25 @@ plt.show()
 
 
 
+=======
+>>>>>>> 9bbe79ecff8c4b3ffffd1cc6cff1fd3cef6f8690
 # Divisão em conjunto de treino e de teste
 X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
 
 # Distribuição das classes nos dados de treino no final da remoção de outliers e linhas duplicadas
-sns.countplot(x = y_train, color = '#73D7FF')
+ax = sns.countplot(x = y_train, color = '#73D7FF')
 plt.title("Diabetes binary distribution after")
+
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+
+plt.ylim(0, 225000)
 plt.show()
-print(df['Diabetes_binary'].value_counts(), "\n")
+print(y_train.value_counts(), "\n")
 
 # Aplicar SMOTE aos dados de treino
 smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
@@ -188,9 +207,11 @@ plt.grid(True, axis = 'both', zorder = 0)
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
-plt.ylim(0, 160000)
+
+plt.ylim(0, 225000)
 plt.show()
-print(df['Diabetes_binary'].value_counts(), "\n")
+
+print(y_train_SMOTE.value_counts(), "\n")
 
 ##---------- MODELIZAÇÃO ----------##
 # Normalizar os dados

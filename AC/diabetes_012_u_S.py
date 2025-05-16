@@ -48,15 +48,16 @@ print(df['Diabetes_012'].value_counts(), "\n")
 df_l0 = df[df['Diabetes_012'] == 0]  # classe maioritária
 df_l1 = df[df['Diabetes_012'] == 1]  # classe minoritária
 df_l2 = df[df['Diabetes_012'] == 2]  # classe minoritária
+
 # Calcular IQR e remover outliers **apenas** da classe 0
 Q1 = df_l0.quantile(0.25)
 Q3 = df_l0.quantile(0.75)
 IQR = Q3 - Q1
 cond = ~((df_l0 < (Q1 - 1.5 * IQR)) | (df_l0 > (Q3 + 1.5 * IQR))).any(axis=1)
 df_l0_clean = df_l0[cond]
+
 # Juntar as duas classes
 df = pd.concat([df_l0_clean, df_l1,df_l2], axis=0)
-print(df['Diabetes_012'].value_counts(), "\n")
 
 # Seleção das colunas das características
 X = df.drop("Diabetes_012", axis = 1)
@@ -66,6 +67,23 @@ y = df.Diabetes_012
 
 # Divisão em conjunto de treino e de teste
 X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
+
+# Distribuição de diabetes e não diabetes nos dados de treino depois da remoção de outliers e linhas duplicadas
+ax = sns.countplot(x = y_train, color = '#73D7FF')
+plt.title("Diabetes multiclass distribution after", fontsize = 20)
+plt.xlabel("Diabetes 012", fontsize = 16)
+plt.ylabel("Count", fontsize = 16)
+
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+plt.ylim(0, 225000)
+plt.show()
+
+print(y_train.value_counts(), "\n")
 
 # Escolher o novo tamanho alvo
 objective_len = 40000
@@ -87,16 +105,20 @@ ax = sns.countplot(x = y_train_bal, color = '#73D7FF')
 plt.title("Diabetes distribution (balanced with SMOTE + under)", fontsize = 20)
 plt.xlabel("Diabetes 012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
+
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
-plt.ylim(0, 160000)
+plt.ylim(0, 225000)
 plt.show()
 
+print(y_train_bal.value_counts(), "\n")
 
-##---------- Neuronal Network ----------##
+
+##---------- REDES NEURONAIS ----------##
 # Criar o MLP classifier
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train_bal)
