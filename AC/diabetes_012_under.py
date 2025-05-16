@@ -44,13 +44,17 @@ ax=sns.countplot(x = y, color='#73D7FF')
 plt.title("Diabetes multiclass distribution before", fontsize = 22)
 plt.xlabel("Diabetes_012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+
 # Aumentar o tamanho dos números dos eixos
 plt.tick_params(axis = 'both', which = 'major', labelsize = 13)
+
 # Definir os ticks do eixo Y de 25.000 em 25.000
 max_val = y.value_counts().max()
 plt.yticks(ticks=range(0, max_val + 25000, 25000))
+
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis='both', zorder=0)
+
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
@@ -72,16 +76,18 @@ ax=sns.countplot(x = y_train_under, color = '#73D7FF')
 plt.title("Diabetes distribution (train with underSampling)", fontsize = 20)
 plt.xlabel("Diabetes 012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
+
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
-plt.ylim(0, 160000)
+plt.ylim(0, 225000)
 plt.show()
 
 
-##---------- Neuronal Network ----------##
+##---------- REDES NEURONAIS ----------##
 # Criar o MLP classifier
 mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
 

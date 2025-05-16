@@ -50,10 +50,20 @@ plt.tight_layout()
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
-sns.countplot(x = y)
+ax = sns.countplot(x = y, color = '#73D7FF')
 plt.title("Diabetes distribution")
+
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+plt.ylim(0, 225000)
 plt.show()
+
 print(df['Diabetes_012'].value_counts(), "\n")
+
 
 # Verificar se são linearmente separáveis
 # Normalizar os dados
@@ -121,7 +131,7 @@ X = df.drop("Diabetes_012", axis = 1)
 y = df.Diabetes_012
 
 # Distribuição de diabetes e não diabetes nos dados de treino depois do SMOTE 
-ax=sns.countplot(x = y, color = '#73D7FF')
+ax = sns.countplot(x = y, color = '#73D7FF')
 plt.title("Diabetes multiclass distribution after", fontsize = 20)
 plt.xlabel("Diabetes 012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
@@ -147,16 +157,18 @@ ax=sns.countplot(x = y_train_SMOTE, color = '#73D7FF')
 plt.title("Diabetes multiclass distribution (SMOTE)", fontsize = 20)
 plt.xlabel("Diabetes 012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
+
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
-plt.ylim(0, 160000)
+plt.ylim(0, 225000)
 plt.show()
 
 
-##---------- Neuronal Network ----------##
+##---------- REDES NEURONAIS ----------##
 # Criar o MLP classifier
 mlp = MLPClassifier(hidden_layer_sizes = (10, 5), activation = 'relu', solver = 'adam', max_iter = 1000, tol = 0.0001,random_state = 42)
 

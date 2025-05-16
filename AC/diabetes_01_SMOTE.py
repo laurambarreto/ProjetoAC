@@ -50,8 +50,15 @@ plt.tight_layout()
 plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
-sns.countplot(x = y, color = '#73D7FF')
+ax = sns.countplot(x = y, color = '#73D7FF')
 plt.title("Diabetes distribution")
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+
+plt.ylim(0, 225000)
 plt.show()
 
 # Verificar se são linearmente separáveis
@@ -82,7 +89,7 @@ plt.show()
 
 # Variância explicada pelas duas e três primeiras componentes
 var_2 = sum(pca.explained_variance_ratio_[:2])
-print(f"Variância explicada pelas 2 primeiras componentes: {var_2:.4f}")
+print(f"Variance explained by the first two components: {var_2:.4f}")
 
 ##---------- Pré-processamento ----------##
 # Verificar dados nulos (NÃO HÁ NENHUM DADO A FALTAR)
@@ -126,15 +133,24 @@ plt.grid(True, axis = 'both', zorder = 0)
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
-plt.ylim(0, 160000)
+plt.ylim(0, 225000)
 plt.show()
 
 # Divisão em conjunto de treino e de teste
 X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
 
 # Distribuição das classes nos dados de treino no final da remoção de outliers e linhas duplicadas
-sns.countplot(x = y_train, color = '#73D7FF')
+ax = sns.countplot(x = y_train, color = '#73D7FF')
 plt.title("Diabetes binary distribution after")
+
+# Colocar grelha nos dois eixos, atrás das barras
+plt.grid(True, axis = 'both', zorder = 0)
+
+# Colocar as barras à frente da grelha
+for bar in ax.patches:
+    bar.set_zorder(3)
+
+plt.ylim(0, 225000)
 plt.show()
 print(df['Diabetes_binary'].value_counts(), "\n")
 
@@ -153,7 +169,8 @@ plt.grid(True, axis = 'both', zorder = 0)
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
-plt.ylim(0, 160000)
+
+plt.ylim(0, 225000)
 plt.show()
 print(df['Diabetes_binary'].value_counts(), "\n")
 

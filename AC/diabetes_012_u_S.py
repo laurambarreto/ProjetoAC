@@ -87,16 +87,18 @@ ax = sns.countplot(x = y_train_bal, color = '#73D7FF')
 plt.title("Diabetes distribution (balanced with SMOTE + under)", fontsize = 20)
 plt.xlabel("Diabetes 012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
+
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
-plt.ylim(0, 160000)
+plt.ylim(0, 225000)
 plt.show()
 
 
-##---------- Neuronal Network ----------##
+##---------- REDES NEURONAIS ----------##
 # Criar o MLP classifier
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train_bal)
