@@ -51,7 +51,7 @@ plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
 ax = sns.countplot(x = y, color = '#73D7FF')
-plt.title("Diabetes distribution")
+plt.title("Diabetes distribution before")
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
 # Colocar as barras à frente da grelha
@@ -122,19 +122,6 @@ df = pd.concat([df_l0_clean, df_l1], axis = 0)
 
 X = df.drop("Diabetes_binary", axis = 1)
 y = df.Diabetes_binary
-
-# Distribuição de diabetes e não diabetes nos dados de treino antes da remo
-ax = sns.countplot(x = y, color = '#73D7FF')
-plt.title("Diabetes binary distribution before", fontsize = 20)
-plt.xlabel("Diabetes binary", fontsize = 16)
-plt.ylabel("Count", fontsize = 16)
-# Colocar grelha nos dois eixos, atrás das barras
-plt.grid(True, axis = 'both', zorder = 0)
-# Colocar as barras à frente da grelha
-for bar in ax.patches:
-    bar.set_zorder(3)
-plt.ylim(0, 225000)
-plt.show()
 
 # Divisão em conjunto de treino e de teste
 X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)

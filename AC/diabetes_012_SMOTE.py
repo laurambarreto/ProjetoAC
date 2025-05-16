@@ -51,7 +51,7 @@ plt.show()
 
 # Distribuição de diabetes e não diabetes do dataset
 ax = sns.countplot(x = y, color = '#73D7FF')
-plt.title("Diabetes distribution")
+plt.title("Diabetes distribution before")
 
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
@@ -121,7 +121,7 @@ cond = ~((df_l0 < (Q1 - 1.5 * IQR)) | (df_l0 > (Q3 + 1.5 * IQR))).any(axis=1)
 df_l0_clean = df_l0[cond]
 
 # Juntar as duas classes
-df = pd.concat([df_l0_clean, df_l1,df_l2], axis=0)
+df = pd.concat([df_l0_clean, df_l1,df_l2], axis = 0)
 print(df['Diabetes_012'].value_counts(), "\n")
 
 # Seleção das colunas das características
@@ -130,8 +130,11 @@ X = df.drop("Diabetes_012", axis = 1)
 # Seleção da coluna target
 y = df.Diabetes_012
 
-# Distribuição de diabetes e não diabetes nos dados de treino depois do SMOTE 
-ax = sns.countplot(x = y, color = '#73D7FF')
+# Divisão em conjunto de treino e de teste
+X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
+
+# Distribuição de diabetes e não diabetes nos dados de treino depois da remoção de outliers e linhas duplicadas
+ax = sns.countplot(x = y_train, color = '#73D7FF')
 plt.title("Diabetes multiclass distribution after", fontsize = 20)
 plt.xlabel("Diabetes 012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
@@ -145,15 +148,12 @@ for bar in ax.patches:
 plt.ylim(0, 225000)
 plt.show()
 
-# Divisão em conjunto de treino e de teste
-X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
-
 # Aplicar SMOTE aos dados de treino
 smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
 X_train_SMOTE, y_train_SMOTE = smote.fit_resample(X_train, y_train)
 
 # Distribuição de diabetes e não diabetes nos dados de treino depois do SMOTE 
-ax=sns.countplot(x = y_train_SMOTE, color = '#73D7FF')
+ax = sns.countplot(x = y_train_SMOTE, color = '#73D7FF')
 plt.title("Diabetes multiclass distribution (SMOTE)", fontsize = 20)
 plt.xlabel("Diabetes 012", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)

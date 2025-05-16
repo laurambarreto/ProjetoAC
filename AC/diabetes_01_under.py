@@ -71,6 +71,7 @@ print(df['Diabetes_binary'].value_counts(), "\n")
 
 df_l0 = df[df['Diabetes_binary'] == 0]  # classe maioritária
 df_l1 = df[df['Diabetes_binary'] == 1]  # classe minoritária
+
 # Calcular IQR e remover outliers **apenas** da classe 0
 Q1 = df_l0.quantile(0.25)
 Q3 = df_l0.quantile(0.75)
@@ -99,6 +100,7 @@ plt.grid(True, axis = 'both', zorder = 0)
 # Colocar as barras à frente da grelha
 for bar in ax.patches:
     bar.set_zorder(3)
+
 plt.ylim(0, 225000)
 plt.show()
 
