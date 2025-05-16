@@ -139,7 +139,7 @@ for bar in ax.patches:
 
 plt.ylim(0, 225000)
 plt.show()
-print(df['Diabetes_binary'].value_counts(), "\n")
+print(y_train.value_counts(), "\n")
 
 # Aplicar SMOTE aos dados de treino
 smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
@@ -159,7 +159,8 @@ for bar in ax.patches:
 
 plt.ylim(0, 225000)
 plt.show()
-print(df['Diabetes_binary'].value_counts(), "\n")
+
+print(y_train_SMOTE.value_counts(), "\n")
 
 ##---------- MODELIZAÇÃO ----------##
 # Normalizar os dados

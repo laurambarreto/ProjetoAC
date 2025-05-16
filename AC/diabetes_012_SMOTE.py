@@ -122,7 +122,6 @@ df_l0_clean = df_l0[cond]
 
 # Juntar as duas classes
 df = pd.concat([df_l0_clean, df_l1,df_l2], axis = 0)
-print(df['Diabetes_012'].value_counts(), "\n")
 
 # Seleção das colunas das características
 X = df.drop("Diabetes_012", axis = 1)
@@ -148,6 +147,9 @@ for bar in ax.patches:
 plt.ylim(0, 225000)
 plt.show()
 
+
+print(y_train.value_counts(), "\n")
+
 # Aplicar SMOTE aos dados de treino
 smote = SMOTE(sampling_strategy = 'auto', random_state = 42)
 X_train_SMOTE, y_train_SMOTE = smote.fit_resample(X_train, y_train)
@@ -167,6 +169,7 @@ for bar in ax.patches:
 plt.ylim(0, 225000)
 plt.show()
 
+print(y_train_SMOTE.value_counts(), "\n")
 
 ##---------- REDES NEURONAIS ----------##
 # Criar o MLP classifier

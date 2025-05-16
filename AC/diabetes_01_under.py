@@ -88,11 +88,16 @@ X = df.drop("Diabetes_binary", axis = 1)
 # Seleção da coluna target
 y = df.Diabetes_binary
 
+# Divisão em conjunto de treino e de teste
+X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
+
 # Distribuição de diabetes e não diabetes nos dados de treino depois da remoção de outliers e linhas duplicadas
 ax = sns.countplot(x = y, color = '#73D7FF')
 plt.title("Diabetes binary distribution after", fontsize = 20)
 plt.xlabel("Diabetes binary", fontsize = 16)
 plt.ylabel("Count", fontsize = 16)
+
+print(y_train.value_counts(), "\n")
 
 # Colocar grelha nos dois eixos, atrás das barras
 plt.grid(True, axis = 'both', zorder = 0)
@@ -103,9 +108,6 @@ for bar in ax.patches:
 
 plt.ylim(0, 225000)
 plt.show()
-
-# Divisão em conjunto de treino e de teste
-X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.25, random_state = 42)
 
 # Reduzir o número de exemplos da classe dominante (undersampling) nos dados de treino
 undersampler = RandomUnderSampler(sampling_strategy = 'auto', random_state = 42)
@@ -125,6 +127,8 @@ for bar in ax.patches:
     bar.set_zorder(3)
 plt.ylim(0, 225000)
 plt.show()
+
+print(y_train_under.value_counts(), "\n")
 
 ##---------- MODELIZAÇÃO ----------##
 # Normalizar os dados
